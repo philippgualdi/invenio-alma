@@ -9,3 +9,9 @@
 
 INVENIO_ALMA_DEFAULT_VALUE = "foobar"
 """Default value for the application."""
+
+INVENIO_ALMA_API_KEY = ""
+"""Default value for the Alma API key."""
+
+INVENIO_ALMA_API_HOST = ""
+"""Default value for the Alma API host."""

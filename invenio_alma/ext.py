@@ -8,7 +8,7 @@
 """Invenio module to connect InvenioRDM to Alma."""
 
 from . import config
-
+from .services import AlmaService, AlmaServiceConfig
 
 class InvenioAlma:
     """invenio-alma extension."""
@@ -21,10 +21,19 @@ class InvenioAlma:
     def init_app(self, app):
         """Flask application initialization."""
         self.init_config(app)
+        self.init_services(app)
         app.extensions["invenio-alma"] = self
+        
 
     def init_config(self, app):  # pylint: disable=no-self-use
         """Initialize configuration."""
         for k in dir(config):
             if k.startswith("INVENIO_ALMA_"):
                 app.config.setdefault(k, getattr(config, k))
+                
+    def init_services(self, app):
+        """Initialize service."""
+        with app.app_context():
+            self.alma_service = AlmaService(
+                config=AlmaServiceConfig,
+            )

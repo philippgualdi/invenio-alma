@@ -18,6 +18,7 @@ from click_option_group import optgroup
 from flask.cli import with_appcontext
 from invenio_records_marc21.records.systemfields import MarcDraftProvider
 from sqlalchemy.orm.exc import StaleDataError
+from .proxies import current_alma
 
 from .utils import (
     AlmaConfig,
@@ -120,3 +121,10 @@ def sru(
         handle_csv(csv_file, alma_config, identity)
     else:
         handle_single_import(ac_number, marcid, file_, alma_config, identity)
+
+@alma.command()
+@with_appcontext
+@click.option("--user-email", type=click.STRING, default="alma@tugraz.at")
+def read(user_email):
+    identity = get_identity_from_user_by_email(email=user_email)
+    current_alma.alma_service.search(identity)
