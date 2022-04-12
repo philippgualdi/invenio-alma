@@ -13,5 +13,5 @@ INVENIO_ALMA_DEFAULT_VALUE = "foobar"
 INVENIO_ALMA_API_KEY = ""
 """Default value for the Alma API key."""
 
-INVENIO_ALMA_API_HOST = ""
+INVENIO_ALMA_API_HOST = "api-eu.hosted.exlibrisgroup.com"
 """Default value for the Alma API host."""

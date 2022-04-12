@@ -30,12 +30,11 @@ class InvenioAlma:
         for k in dir(config):
             if k.startswith("INVENIO_ALMA_"):
                 app.config.setdefault(k, getattr(config, k))
-                
+
     def service_configs(self, app):
         """Initialize configuration."""
         config = AlmaServiceConfig.build(app)
         return config
-        
 
     def init_services(self, app):
         """Initialize service."""

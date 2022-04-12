@@ -11,11 +11,30 @@
 
 """Alma Service."""
 
-from .base import AlmaBaseService
-from invenio_records_marc21.proxies import current_records_marc21
+import requests
+
+from .base import RepositoryBaseService
+from lxml import etree
+from invenio_records_marc21.services.record.metadata import Marc21Metadata
+
+class AlmaRESTService(RepositoryBaseService):
+    def _baseurl(self):
+        api_url = "https://%s/almaws/v1/bibs?view=full&expand=None&apikey=%s" % (
+            self.config.api_host,
+            self.config.api_key,
+        )
+        return api_url
+
+    @classmethod
+    def get(cls, url):
+        return requests.get(url, headers={"accept": "application/xml"})
+
+    @classmethod
+    def put(cls, url, data):
+        return requests.put(url, data, headers={"accept": "application/xml"})
 
 
-class AlmaService(AlmaBaseService):
+class AlmaService(AlmaRESTService):
     """Alma service class."""
 
     def __init__(self, config, record_service=None):
@@ -23,36 +42,20 @@ class AlmaService(AlmaBaseService):
 
         :param config: A service configuration
         """
-        super().__init__(config)
-        self._record_module = (
-            record_service if record_service else current_records_marc21
-        )
+        super().__init__(config, record_service)
 
-    @property
-    def _record_service(self):
-        return self._record_module.records_service
-
-    def _search(self, identity, **kwargs):
-        results = self._record_service.scan(identity, **kwargs)
-        result_list = list(results._results)
-        return result_list
-
-    def get_mmsids(self, identity, **kwargs):
-        """_summary_
-
-        Args:
-            identity (str): _description_
-
-        Returns:
-            []: list of mms_id
-        """
-        result_list = self._search(identity, **kwargs)
-        mmsids = []
-        for result in result_list:
-            value = self.deep_get(result.to_dict(), self.config.mms_id)
-            if value:
-                mmsids.append(value)
+    def update_url(self, identity, new_url, **kwargs):
+        mmsids = self.get_mmsids(identity, **kwargs)
+        base_url = self._baseurl()
+        base_url = base_url + "&mms_id="
+        for mmsid in mmsids:
+            api_url = base_url + mmsid
+            data = self.get(api_url)
+            tree =  etree.fromstring(data.text.encode("utf-8"))
+            test = tree.find(".//bib//record")
+            metadata = Marc21Metadata()
+            metadata.load(test)
+            subfields = self.deep_get(metadata.json, "metadata.fields.856")
+            tes = subfields[0].get("subfields", {}).get("u")
+            etree.tostring(test)
         return mmsids
-
-    def update_url(self, identity, **kwargs):
-        return

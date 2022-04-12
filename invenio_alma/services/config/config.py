@@ -10,6 +10,7 @@
 
 from .base import AlmaBaseServiceConfig
 
+
 class AlmaServiceConfig(AlmaBaseServiceConfig):
     """Alma service configuration class."""
 
