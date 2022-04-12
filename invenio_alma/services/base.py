@@ -29,15 +29,19 @@ class RecordValueMixin:
         )
         
     @classmethod
-    def deep_set(cls, dictionary, keys, value, create_missing=True):
-        """get value from multiple keys
+    def deep_set(cls, dictionary, keys, value, create_missing=False):
+        """set value from multiple keys
         .param dictionary to search
         :param keys str multiple keys
         """
         skeys = keys.split(".")
+        import re
+        pos_list = r"^\[[0-9]+\]$"
         d = dictionary
         for key in skeys[:-1]:
-            if key in d:
+            if re.match(pos_list,key):
+                d = d[key[1:-1]]
+            elif key in d:
                 d = d[key]
             elif create_missing:
                 d = d.setdefault(key, {})

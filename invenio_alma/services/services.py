@@ -18,6 +18,7 @@ from lxml import etree
 from invenio_records_marc21.services.record.metadata import Marc21Metadata
 
 class AlmaRESTService(RepositoryBaseService):
+    
     def _baseurl(self):
         api_url = "https://%s/almaws/v1/bibs?view=full&expand=None&apikey=%s" % (
             self.config.api_host,
@@ -56,6 +57,7 @@ class AlmaService(AlmaRESTService):
             metadata = Marc21Metadata()
             metadata.load(test)
             subfields = self.deep_get(metadata.json, "metadata.fields.856")
-            tes = subfields[0].get("subfields", {}).get("u")
+            
+            test = self.deep_set(metadata.json,"metadata.fields.856.[0].subfields.u")
             etree.tostring(test)
         return mmsids

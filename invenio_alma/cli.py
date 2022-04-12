@@ -128,4 +128,4 @@ def sru(
 @click.option("--user-email", type=click.STRING, default="alma@tugraz.at")
 def update_url_in_alma(user_email):
     identity = get_identity_from_user_by_email(email=user_email)
-    mmsids = current_alma.alma_service.update_url(identity)
+    mmsids = current_alma.alma_service.update_url(identity, "test")
