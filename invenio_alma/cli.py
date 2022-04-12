@@ -122,9 +122,10 @@ def sru(
     else:
         handle_single_import(ac_number, marcid, file_, alma_config, identity)
 
-@alma.command()
+
+@alma.command("update-url-in-alma")
 @with_appcontext
 @click.option("--user-email", type=click.STRING, default="alma@tugraz.at")
-def read(user_email):
+def update_url_in_alma(user_email):
     identity = get_identity_from_user_by_email(email=user_email)
-    current_alma.alma_service.search(identity)
+    mmsids = current_alma.alma_service.get_mmsids(identity)

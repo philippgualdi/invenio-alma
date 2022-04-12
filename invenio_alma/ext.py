@@ -10,6 +10,7 @@
 from . import config
 from .services import AlmaService, AlmaServiceConfig
 
+
 class InvenioAlma:
     """invenio-alma extension."""
 
@@ -23,7 +24,6 @@ class InvenioAlma:
         self.init_config(app)
         self.init_services(app)
         app.extensions["invenio-alma"] = self
-        
 
     def init_config(self, app):  # pylint: disable=no-self-use
         """Initialize configuration."""
@@ -31,9 +31,15 @@ class InvenioAlma:
             if k.startswith("INVENIO_ALMA_"):
                 app.config.setdefault(k, getattr(config, k))
                 
+    def service_configs(self, app):
+        """Initialize configuration."""
+        config = AlmaServiceConfig.build(app)
+        return config
+        
+
     def init_services(self, app):
         """Initialize service."""
-        with app.app_context():
-            self.alma_service = AlmaService(
-                config=AlmaServiceConfig,
-            )
+        config = self.service_configs(app)
+        self.alma_service = AlmaService(
+            config=config,
+        )

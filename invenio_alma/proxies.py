@@ -13,7 +13,5 @@
 from flask import current_app
 from werkzeug.local import LocalProxy
 
-current_alma = LocalProxy(
-    lambda: current_app.extensions["invenio-alma"]
-)
+current_alma = LocalProxy(lambda: current_app.extensions["invenio-alma"])
 """Helper proxy to get the current records marc21 extension."""

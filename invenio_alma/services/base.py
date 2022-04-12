@@ -10,19 +10,26 @@
 
 from functools import reduce
 
+
 class RecordValueMixin:
     """Alma record value mixin class."""
 
-    def deep_get(dictionary, keys, default=None):
+    @classmethod
+    def deep_get(cls, dictionary, keys, default=None):
         """get value from multiple keys
         .param dictionary to search
         :param keys str multiple keys
         """
-        return reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
-    
+        return reduce(
+            lambda d, key: d.get(key, default) if isinstance(d, dict) else default,
+            keys.split("."),
+            dictionary,
+        )
+
+
 class AlmaBaseService(RecordValueMixin):
     """Alma record service class."""
-    
+
     def __init__(self, config):
         """Constructor.
 

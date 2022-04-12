@@ -11,4 +11,8 @@ from .base import AlmaBaseService
 from .services import AlmaService
 from .config import AlmaServiceConfig
 
-__all__ = ("AlmaBaseService", "AlmaService", "AlmaServiceConfig",)
+__all__ = (
+    "AlmaBaseService",
+    "AlmaService",
+    "AlmaServiceConfig",
+)

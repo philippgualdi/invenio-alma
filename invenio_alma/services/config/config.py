@@ -8,9 +8,10 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
+from .base import AlmaBaseServiceConfig
 
-class AlmaServiceConfig:
-    """Marc21 record service class."""
-    
+class AlmaServiceConfig(AlmaBaseServiceConfig):
+    """Alma service configuration class."""
+
     mms_id = "metadata.fields.001"
     ac_id = "metadata.fields.009"
