@@ -15,6 +15,7 @@ import requests
 
 from .base import RepositoryBaseService
 from lxml import etree
+from lxml.etree import _Element as Element
 from invenio_records_marc21.services.record.metadata import Marc21Metadata
 
 class AlmaRESTService(RepositoryBaseService):
@@ -30,20 +31,10 @@ class AlmaRESTService(RepositoryBaseService):
     def _extract_almarecord(cls, data):
         if isinstance(data, str):
             data = data.encode("utf-8")
-        tree =  etree.fromstring(data)
-        test = tree.find(".//bib//record")
-        metadata = Marc21Metadata()
-        metadata.load(test)
-        return metadata
+        record =  etree.fromstring(data)
+        record = record.xpath(".//bibs")
+        return record
 
-    @classmethod
-    def _create_almarecord(cls, data):
-        if isinstance(data, str):
-            data = data.encode("utf-8")
-        tree =  etree.fromstring(data)
-        root = etree.Element("bib")
-        root.append(tree)
-        return root
     
     @classmethod
     def get(cls, url):
@@ -54,7 +45,7 @@ class AlmaRESTService(RepositoryBaseService):
 
     @classmethod
     def put(cls, url, data):
-        return requests.put(url, data, headers={"accept": "application/xml"})
+        return requests.put(url, data, headers={"content-type": "application/xml", "accept": "application/xml"})
 
 
 class AlmaService(AlmaRESTService):
@@ -77,12 +68,19 @@ class AlmaService(AlmaRESTService):
             recid = self.deep_get(record, self.config.recid)
             
             api_url = base_url + mmsid
-            
             data = self.get(api_url)
             metadata = self._extract_almarecord(data)
-
-            record_url = [new_url.format(recid=recid)]
-            record_new = self.deep_set(metadata.json, "metadata.fields.856.[0].subfields.u", record_url)
-            metadata_new = Marc21Metadata()
-            metadata_new.json = record_new
-            record_new = self._create_almarecord(str(record_new))          
+            
+            url_datafield = metadata.xpath(".//bib//record//datafield[@ind1='4' and @ind2=' ' and @tag='856']//subfield[@code='u']")
+            if len(url_datafield) == 1:
+                url_datafield = url_datafield[0]
+            url_datafield.text = new_url.format(recid=recid)
+            #record_new = self.deep_set(metadata.json, "metadata.fields.856.[0].subfields.u", record_url)
+            alma_record = etree.tostring(metadata)
+            alma_record = alma_record.decode("UTF-8")
+            api_url = "https://%s/almaws/v1/bibs/%s?apikey=%s" % (
+                self.config.api_host,
+                mmsid,
+                self.config.api_key,
+            )
+            record_new = self.put(api_url, alma_record)          
