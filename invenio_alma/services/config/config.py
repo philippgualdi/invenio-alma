@@ -16,3 +16,4 @@ class AlmaServiceConfig(AlmaBaseServiceConfig):
 
     mms_id = "metadata.fields.001"
     ac_id = "metadata.fields.009"
+    recid = "id"

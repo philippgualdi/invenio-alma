@@ -27,8 +27,30 @@ class AlmaRESTService(RepositoryBaseService):
         return api_url
 
     @classmethod
+    def _extract_almarecord(cls, data):
+        if isinstance(data, str):
+            data = data.encode("utf-8")
+        tree =  etree.fromstring(data)
+        test = tree.find(".//bib//record")
+        metadata = Marc21Metadata()
+        metadata.load(test)
+        return metadata
+
+    @classmethod
+    def _create_almarecord(cls, data):
+        if isinstance(data, str):
+            data = data.encode("utf-8")
+        tree =  etree.fromstring(data)
+        root = etree.Element("bib")
+        root.append(tree)
+        return root
+    
+    @classmethod
     def get(cls, url):
-        return requests.get(url, headers={"accept": "application/xml"})
+        data = requests.get(url, headers={"accept": "application/xml"})
+        if data.status_code == 200:
+            return data.text
+        return ""
 
     @classmethod
     def put(cls, url, data):
@@ -46,18 +68,21 @@ class AlmaService(AlmaRESTService):
         super().__init__(config, record_service)
 
     def update_url(self, identity, new_url, **kwargs):
-        mmsids = self.get_mmsids(identity, **kwargs)
+        records = self.get_records(identity, **kwargs)
+        
         base_url = self._baseurl()
         base_url = base_url + "&mms_id="
-        for mmsid in mmsids:
-            api_url = base_url + mmsid
-            data = self.get(api_url)
-            tree =  etree.fromstring(data.text.encode("utf-8"))
-            test = tree.find(".//bib//record")
-            metadata = Marc21Metadata()
-            metadata.load(test)
-            subfields = self.deep_get(metadata.json, "metadata.fields.856")
+        for record in records:
+            mmsid = self.deep_get(record, self.config.mms_id)
+            recid = self.deep_get(record, self.config.recid)
             
-            test = self.deep_set(metadata.json,"metadata.fields.856.[0].subfields.u")
-            etree.tostring(test)
-        return mmsids
+            api_url = base_url + mmsid
+            
+            data = self.get(api_url)
+            metadata = self._extract_almarecord(data)
+
+            record_url = [new_url.format(recid=recid)]
+            record_new = self.deep_set(metadata.json, "metadata.fields.856.[0].subfields.u", record_url)
+            metadata_new = Marc21Metadata()
+            metadata_new.json = record_new
+            record_new = self._create_almarecord(str(record_new))          

@@ -29,7 +29,7 @@ class RecordValueMixin:
         )
         
     @classmethod
-    def deep_set(cls, dictionary, keys, value, create_missing=False):
+    def deep_set(cls, dictionary, keys, value):
         """set value from multiple keys
         .param dictionary to search
         :param keys str multiple keys
@@ -39,15 +39,13 @@ class RecordValueMixin:
         pos_list = r"^\[[0-9]+\]$"
         d = dictionary
         for key in skeys[:-1]:
-            if re.match(pos_list,key):
-                d = d[key[1:-1]]
-            elif key in d:
+            if key in d:
                 d = d[key]
-            elif create_missing:
-                d = d.setdefault(key, {})
+            elif re.match(pos_list,key):
+                d = d[int(key[1:-1])]
             else:
                 return dictionary
-        if keys[-1] in d or create_missing:
+        if keys[-1] in d:
             d[keys[-1]] = value
         return dictionary
 
@@ -105,3 +103,18 @@ class RepositoryBaseService(AlmaBaseService):
             if value:
                 mmsids.append(value)
         return mmsids
+
+    def get_records(self, identity, **kwargs):
+        """Search records
+
+        Args:
+            identity (str): _description_
+
+        Returns:
+            []: list of records 
+        """
+        result_list = self._search(identity, **kwargs)
+        records = []
+        for result in result_list:
+            records.append(result.to_dict())
+        return records

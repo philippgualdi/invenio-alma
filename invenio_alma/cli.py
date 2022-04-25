@@ -126,6 +126,7 @@ def sru(
 @alma.command("update-url-in-alma")
 @with_appcontext
 @click.option("--user-email", type=click.STRING, default="alma@tugraz.at")
-def update_url_in_alma(user_email):
+@click.option("--url", type=click.STRING, default="https://repository.tugraz.at/records/{recid}")
+def update_url_in_alma(user_email, url):
     identity = get_identity_from_user_by_email(email=user_email)
-    mmsids = current_alma.alma_service.update_url(identity, "test")
+    mmsids = current_alma.alma_service.update_url(identity, url)
