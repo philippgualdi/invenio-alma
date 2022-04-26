@@ -32,7 +32,7 @@ class AlmaRESTService(RepositoryBaseService):
         if isinstance(data, str):
             data = data.encode("utf-8")
         record =  etree.fromstring(data)
-        record = record.xpath(".//bibs")
+        record = record.xpath(".//bib")[0] # extract single record
         return record
 
     
@@ -60,27 +60,26 @@ class AlmaService(AlmaRESTService):
 
     def update_url(self, identity, new_url, **kwargs):
         records = self.get_records(identity, **kwargs)
-        
-        base_url = self._baseurl()
-        base_url = base_url + "&mms_id="
+
         for record in records:
             mmsid = self.deep_get(record, self.config.mms_id)
-            recid = self.deep_get(record, self.config.recid)
+            recid = self.deep_get(record, self.config.rec_id)
             
-            api_url = base_url + mmsid
+            # prepare record
+            api_url = self.config.url_get(mmsid)
             data = self.get(api_url)
             metadata = self._extract_almarecord(data)
             
-            url_datafield = metadata.xpath(".//bib//record//datafield[@ind1='4' and @ind2=' ' and @tag='856']//subfield[@code='u']")
-            if len(url_datafield) == 1:
-                url_datafield = url_datafield[0]
+            #extract url subfield
+            url_datafield = metadata.xpath(self.config.url_path)
+            
+            if len(url_datafield) == 0:
+                # No URL in record
+                continue
+            
+            url_datafield = url_datafield[0]
             url_datafield.text = new_url.format(recid=recid)
-            #record_new = self.deep_set(metadata.json, "metadata.fields.856.[0].subfields.u", record_url)
             alma_record = etree.tostring(metadata)
             alma_record = alma_record.decode("UTF-8")
-            api_url = "https://%s/almaws/v1/bibs/%s?apikey=%s" % (
-                self.config.api_host,
-                mmsid,
-                self.config.api_key,
-            )
-            record_new = self.put(api_url, alma_record)          
+            url_put = self.config.url_put(mmsid)
+            record_new = self.put(url_put, alma_record)

@@ -19,7 +19,8 @@ class RecordValueMixin:
     @classmethod
     def deep_get(cls, dictionary, keys, default=None):
         """get value from multiple keys
-        .param dictionary to search
+
+        :param dictionary to search
         :param keys str multiple keys
         """
         return reduce(
@@ -31,7 +32,8 @@ class RecordValueMixin:
     @classmethod
     def deep_set(cls, dictionary, keys, value):
         """set value from multiple keys
-        .param dictionary to search
+
+        :param dictionary to search
         :param keys str multiple keys
         """
         skeys = keys.split(".")
@@ -68,6 +70,7 @@ class RepositoryBaseService(AlmaBaseService):
         """Constructor.
 
         :param config: A service configuration
+        :param record_service: A repository service. Default current_records_marc21
         """
         super().__init__(config)
         self._record_module = (
