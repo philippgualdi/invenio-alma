@@ -1,0 +1,369 @@
+{
+    "id": "8jjc4-76b49",
+    "pid": {
+      "pk": 8,
+      "status": "R",
+      "obj_type": "rec",
+      "pid_type": "marcid"
+    },
+    "pids": {},
+    "files": {
+      "enabled": true
+    },
+    "access": {
+      "files": "public",
+      "record": "public",
+      "embargo": {
+        "until": null,
+        "active": false,
+        "reason": null
+      }
+    },
+    "metadata": {
+      "fields": {
+        "100": [
+          {
+            "ind1": "1",
+            "ind2": "_",
+            "subfields": {
+              "4": [
+                "aut"
+              ],
+              "a": [
+                "Invenio, Denis"
+              ]
+            }
+          }
+        ],
+        "245": [
+          {
+            "ind1": "1",
+            "ind2": "0",
+            "subfields": {
+              "a": [
+                "Mac21 Record test "
+              ],
+              "c": [
+                "Denis Invenio"
+              ]
+            }
+          }
+        ],
+        "264": [
+          {
+            "ind1": "_",
+            "ind2": "1",
+            "subfields": {
+              "c": [
+                "2022"
+              ]
+            }
+          }
+        ],
+        "300": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "Getr. Zählung"
+              ]
+            }
+          }
+        ],
+        "502": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "Technical University Graz"
+              ]
+            }
+          }
+        ],
+        "689": [
+          {
+            "ind1": "0",
+            "ind2": "0",
+            "subfields": {
+              "0": [
+                "(DE-588)4543324"
+              ]
+            }
+          }
+        ],
+        "856": [
+          {
+            "ind1": "4",
+            "ind2": "_",
+            "subfields": {
+              "3": [
+                "Volltext"
+              ],
+              "u": [
+                "http://repository.tugraz.at/marc21/8jjc4-76b49"
+              ],
+              "x": [
+                "TUG"
+              ]
+            }
+          }
+        ],
+        "970": [
+          {
+            "ind1": "1",
+            "ind2": "_",
+            "subfields": {
+              "c": [
+                "30"
+              ]
+            }
+          },
+          {
+            "ind1": "2",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "TUG"
+              ],
+              "d": [
+                "HS-DISS"
+              ]
+            }
+          }
+        ],
+        "974": [
+          {
+            "ind1": "0",
+            "ind2": "s",
+            "subfields": {
+              "A": [
+                "a|1dcr|||||17"
+              ],
+              "F": [
+                "030"
+              ]
+            }
+          },
+          {
+            "ind1": "0",
+            "ind2": "s",
+            "subfields": {
+              "A": [
+                "a|a|||||||||||"
+              ],
+              "F": [
+                "050"
+              ]
+            }
+          },
+          {
+            "ind1": "0",
+            "ind2": "s",
+            "subfields": {
+              "A": [
+                "mu||w||"
+              ],
+              "F": [
+                "051"
+              ]
+            }
+          }
+        ],
+        "001": "99000451931123123",
+        "005": "20200511091822.0",
+        "007": "tu",
+        "008": "131003|2012    |||      m    ||| 0 eng c",
+        "009": "AC11056123",
+        "015": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "2": [
+                "oeb"
+              ],
+              "a": [
+                "OeBB"
+              ]
+            }
+          }
+        ],
+        "035": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "(AT-OBV)AC11056123"
+              ]
+            }
+          },
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "AC11056123"
+              ]
+            }
+          },
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "(Aleph)011060197ACC01"
+              ]
+            }
+          },
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "(DE-599)OBVAC11056123"
+              ]
+            }
+          },
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "(EXLNZ-43ACC_NETWORK)990110601970201233"
+              ]
+            }
+          }
+        ],
+        "040": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "TUG"
+              ],
+              "b": [
+                "ger"
+              ],
+              "d": [
+                "AT-UBTUG"
+              ],
+              "e": [
+                "rakwb"
+              ]
+            }
+          }
+        ],
+        "041": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "a": [
+                "eng"
+              ]
+            }
+          }
+        ],
+        "044": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "c": [
+                "XA-AT"
+              ]
+            }
+          }
+        ],
+        "084": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "2": [
+                "bkl"
+              ],
+              "a": [
+                "51.45"
+              ]
+            }
+          },
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "2": [
+                "bkl"
+              ],
+              "a": [
+                "53.16"
+              ]
+            }
+          }
+        ],
+        "090": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "h": [
+                "g"
+              ]
+            }
+          }
+        ],
+        "AVA": [
+          {
+            "ind1": "_",
+            "ind2": "_",
+            "subfields": {
+              "0": [
+                "990004519310204123"
+              ],
+              "8": [
+                "2237724340004123"
+              ],
+              "a": [
+                "43ACC_TUG"
+              ],
+              "b": [
+                "FHB"
+              ],
+              "c": [
+                "TUG Hochschulschriften (TUGHS)"
+              ],
+              "d": [
+                "6000/2012 S385"
+              ],
+              "e": [
+                "available"
+              ],
+              "f": [
+                "1"
+              ],
+              "g": [
+                "0"
+              ],
+              "j": [
+                "TUGHS"
+              ],
+              "k": [
+                "8"
+              ],
+              "p": [
+                "1"
+              ],
+              "q": [
+                "Hauptbibliothek"
+              ]
+            }
+          }
+        ]
+      },
+      "leader": "01198nam a2200397 c 4500"
+    }
+  }

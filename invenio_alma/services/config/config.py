@@ -22,20 +22,27 @@ class AlmaServiceConfig:
         "and @tag='856']//subfield[@code='u']"
     )
 
-    @classmethod
-    def build(cls, app):
+    controlfields = [
+        "001",
+        "003",
+        "005",
+        "006",
+        "007",
+        "008",
+        "009",
+    ]
+
+    def build(self, app):
         """Update configuration from flask app."""
-        cls.api_key = app.config.get("INVENIO_ALMA_API_KEY", "")
-        cls.api_host = app.config.get("INVENIO_ALMA_API_HOST", "")
-        return cls
+        self.api_key = app.config.get("INVENIO_ALMA_API_KEY", "")
+        self.api_host = app.config.get("INVENIO_ALMA_API_HOST", "")
+        return self
 
-    @classmethod
-    def _base_url(cls):
+    def _base_url(self):
         """Property get base url for alma rest api."""
-        return f"https://{cls.api_host}/almaws/v1/bibs"
+        return f"https://{self.api_host}/almaws/v1/bibs"
 
-    @classmethod
-    def url_get(cls, mms_id):
+    def url_get(self, mms_id):
         """Alma rest api get record url.
 
         :param mms_id (str): alma record id
@@ -43,18 +50,25 @@ class AlmaServiceConfig:
         :return str: alma api url.
         """
         api_url = (
-            cls._base_url()
-            + f"?mms_id={mms_id}&apikey={cls.api_key}&view=full&expand=None"
+            self._base_url()
+            + f"?mms_id={mms_id}&apikey={self.api_key}&view=full&expand=None"
         )
         return api_url
 
-    @classmethod
-    def url_put(cls, mms_id):
+    def url_put(self, mms_id):
         """Alma rest api put record url.
 
         :param mms_id (str): alma record id
 
         :return str: alma api url.
         """
-        api_url = cls._base_url() + f"/{mms_id}?apikey={cls.api_key}"
+        api_url = self._base_url() + f"/{mms_id}?apikey={self.api_key}"
+        return api_url
+
+    def url_post(self):
+        """Alma rest api post record url.
+
+        :return str: alma api url.
+        """
+        api_url = self._base_url() + f"?apikey={self.api_key}"
         return api_url

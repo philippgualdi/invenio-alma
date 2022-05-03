@@ -8,6 +8,7 @@
 """Command line interface to interact with the Alma-Connector module."""
 
 import csv
+import json
 import sys
 
 # import logging
@@ -136,3 +137,18 @@ def update_url_in_alma(user_email, url):
     identity = get_identity_from_user_by_email(email=user_email)
     records = current_alma.repository_service.get_records(identity)
     current_alma.alma_service.update_url(records, url)
+
+
+@alma.command("create")
+@with_appcontext
+@click.option("--file", "file", type=click.File("rb"))
+def create(file):
+    """Create Record in remote alma repository.
+
+    :params file (str): new repository url. Url must contain '{recid}'
+    """
+    click.secho("Creating record...", fg="blue")
+    record = json.load(file)
+    response = current_alma.alma_service.create_record(record)
+    click.secho("Created record!", fg="green")
+    click.secho(response, fg="green")

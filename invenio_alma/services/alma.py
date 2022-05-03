@@ -10,6 +10,7 @@
 
 import requests
 from lxml import etree
+from lxml.builder import E
 
 from .base import BaseService
 from .errors import AlmaRESTException
@@ -29,6 +30,26 @@ class AlmaRESTService(BaseService):
         :return str: response content
         """
         response = requests.get(url, headers={"accept": "application/xml"})
+        if response.status_code >= 400:
+            raise AlmaRESTException(code=response.status_code, msg=response.text)
+        return response.text
+
+    @staticmethod
+    def post(url, data):
+        """Alma rest api post request.
+
+        :param url (str): url to api
+        :param data (str): payload
+
+        :raises AlmaRESTException if request was not successful
+
+        :return str: response content
+        """
+        response = requests.post(
+            url,
+            data,
+            headers={"content-type": "application/xml", "accept": "application/xml"},
+        )
         if response.status_code >= 400:
             raise AlmaRESTException(code=response.status_code, msg=response.text)
         return response.text
@@ -102,3 +123,55 @@ class AlmaService(AlmaRESTService):
             alma_record = alma_record.decode("UTF-8")
             url_put = self.config.url_put(mms_id)
             self.put(url_put, alma_record)
+
+    def create_record(self, metadata):
+        """Create a record in Alma.
+
+        :param metadata (Dict): The metadata for the new record.
+        """
+        # prepare url
+        api_url = self.config.url_post()
+
+        # convert metadata to marc21 xml
+        record_dict = metadata.get("metadata", {})
+        alma_tree = self._convert_metadata(record_dict)
+        alma_record = etree.tostring(alma_tree)
+        alma_record = alma_record.decode("UTF-8")
+        response = self.post(api_url, alma_record)
+        return response
+
+    def _convert_metadata(self, obj):
+        """Convert the metadata to Marc21 xml."""
+        rec = E.record()
+        leader = obj.get("leader")
+        if leader:
+            rec.append(E.leader(leader))
+
+        fields = obj.get("fields", [])
+
+        # items = iteritems(fields)
+
+        for key, value in fields.items():
+            # Control fields
+            if key in self.config.controlfields:
+                controlfield = E.controlfield(value)
+                controlfield.attrib["tag"] = key
+                rec.append(controlfield)
+            else:
+
+                for subfields in value:
+                    datafield = E.datafield()
+                    datafield.attrib["tag"] = key
+
+                    indicator1 = subfields.get("ind1", " ")
+                    indicator2 = subfields.get("ind2", " ")
+
+                    datafield.attrib["ind1"] = indicator1.replace("_", " ")
+                    datafield.attrib["ind2"] = indicator2.replace("_", " ")
+                    items = subfields.get("subfields", {})
+                    for k in items.keys():
+                        datafield.append(E.subfield(", ".join(items[k]), code=k))
+                rec.append(datafield)
+        bib = E.bib()
+        bib.append(rec)
+        return bib
