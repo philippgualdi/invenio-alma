@@ -48,9 +48,9 @@ class AlmaResource(Resource):
     def create_url_rules(self):
         """Create the URL rules for the record resource."""
         routes = self.config.routes
-
+        types = ",".join(self.config.record_id_search_key.keys())
         rules = [
-            route("GET", routes["item"], self.read),
+            route("GET", routes["item"].format(types=types), self.read),
         ]
 
         return rules
@@ -61,9 +61,9 @@ class AlmaResource(Resource):
     def read(self):
         """Read an item."""
         record_id = resource_requestctx.view_args["record_id"]
+        type = resource_requestctx.view_args["type"]
 
-        search_key = "ac_number" if record_id.startswith("AC") else "mmsid"
-        self.service.search_key = self.config.record_id_search_key[search_key]
+        self.service.config.search_key = self.config.record_id_search_key[type]
         try:
             metadata = Marc21Metadata(metadata=self.service.get_record(record_id))
             item = metadata.json

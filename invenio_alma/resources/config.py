@@ -25,7 +25,7 @@ class AlmaResourceConfig(ResourceConfig):  # pylint: disable=too-few-public-meth
     url_prefix = "/alma"
 
     routes = {
-        "item": "/<record_id>",
+        "item": "/<any({types}):type>/<record_id>",
     }
 
     response_handlers = {
@@ -38,9 +38,9 @@ class AlmaResourceConfig(ResourceConfig):  # pylint: disable=too-few-public-meth
 
     record_id_search_key = {
         "ac_number": "local_control_field_009",
-        "mmsid": "local_control_field_001",
+        "mmsid": "mms_id",
     }
 
     # Request parsing
     request_read_args = {}
-    request_view_args = {"record_id": ma.fields.Str()}
+    request_view_args = {"type": ma.fields.Str(), "record_id": ma.fields.Field()}
